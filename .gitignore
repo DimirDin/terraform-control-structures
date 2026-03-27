@@ -17,5 +17,6 @@ personal.auto.tfvars
 *.dll
 *.so
 *.dylib
-*.tfstate
-*.tfstate.*
+
+# Generated files
+inventory.cfg

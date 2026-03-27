@@ -13,9 +13,9 @@ resource "yandex_vpc_subnet" "develop" {
 # Subnet для DB в зоне ru-central1-b
 resource "yandex_vpc_subnet" "db" {
   name           = "${var.vpc_name}-db"
-  zone           = "ru-central1-b"
+  zone           = var.db_zone
   network_id     = yandex_vpc_network.develop.id
-  v4_cidr_blocks = ["10.0.2.0/24"]
+  v4_cidr_blocks = [var.db_cidr]
 }
 
 # Data source для образа Ubuntu

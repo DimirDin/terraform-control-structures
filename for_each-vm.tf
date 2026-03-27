@@ -6,6 +6,8 @@ variable "each_vm" {
     ram          = number
     disk_volume  = number
     zone         = string
+    platform_id  = string
+    disk_type    = string
   }))
   default = [
     {
@@ -14,6 +16,8 @@ variable "each_vm" {
       ram         = 4
       disk_volume = 20
       zone        = "ru-central1-a"
+      platform_id = "standard-v1"
+      disk_type   = "network-ssd"
     },
     {
       vm_name     = "replica"
@@ -21,6 +25,8 @@ variable "each_vm" {
       ram         = 2
       disk_volume = 15
       zone        = "ru-central1-b"
+      platform_id = "standard-v1"
+      disk_type   = "network-ssd"
     }
   ]
 }
@@ -30,7 +36,7 @@ resource "yandex_compute_instance" "db" {
   for_each = { for vm in var.each_vm : vm.vm_name => vm }
 
   name        = each.value.vm_name
-  platform_id = "standard-v1"
+  platform_id = each.value.platform_id
   zone        = each.value.zone
 
   resources {
@@ -43,12 +49,12 @@ resource "yandex_compute_instance" "db" {
     initialize_params {
       image_id = data.yandex_compute_image.ubuntu.image_id
       size     = each.value.disk_volume
-      type     = "network-ssd"
+      type     = each.value.disk_type
     }
   }
 
   network_interface {
-    subnet_id = each.value.zone == "ru-central1-a" ? yandex_vpc_subnet.develop.id : yandex_vpc_subnet.db.id
+    subnet_id = each.value.zone == var.default_zone ? yandex_vpc_subnet.develop.id : yandex_vpc_subnet.db.id
     nat       = true
     security_group_ids = [yandex_vpc_security_group.example.id]
   }

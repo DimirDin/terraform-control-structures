@@ -1,3 +1,9 @@
+variable "security_group_name" {
+  type        = string
+  default     = "example_dynamic"
+  description = "Name of security group"
+}
+
 variable "security_group_ingress" {
   description = "secrules ingress"
   type = list(object(
@@ -54,7 +60,7 @@ variable "security_group_egress" {
 }
 
 resource "yandex_vpc_security_group" "example" {
-  name       = "example_dynamic"
+  name       = var.security_group_name
   network_id = yandex_vpc_network.develop.id
   folder_id  = var.folder_id
 

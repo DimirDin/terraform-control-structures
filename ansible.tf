@@ -2,24 +2,24 @@
 locals {
   webservers = [
     for vm in yandex_compute_instance.web : {
-      name             = vm.name
+      name              = vm.name
       network_interface = vm.network_interface
-      fqdn             = vm.fqdn
+      fqdn              = vm.fqdn
     }
   ]
 
   databases = [
     for vm in yandex_compute_instance.db : {
-      name             = vm.name
+      name              = vm.name
       network_interface = vm.network_interface
-      fqdn             = vm.fqdn
+      fqdn              = vm.fqdn
     }
   ]
 
   storage = {
-    name             = yandex_compute_instance.storage.name
+    name              = yandex_compute_instance.storage.name
     network_interface = yandex_compute_instance.storage.network_interface
-    fqdn             = yandex_compute_instance.storage.fqdn
+    fqdn              = yandex_compute_instance.storage.fqdn
   }
 }
 
@@ -30,5 +30,5 @@ resource "local_file" "ansible_inventory" {
     databases  = local.databases
     storage    = local.storage
   })
-  filename = "${path.module}/inventory.cfg"
+  filename = var.inventory_path
 }

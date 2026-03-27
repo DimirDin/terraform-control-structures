@@ -13,16 +13,16 @@ resource "yandex_compute_instance" "web" {
   zone        = var.default_zone
 
   resources {
-    cores         = 2
-    memory        = 2
-    core_fraction = 5
+    cores         = var.web_resources.cores
+    memory        = var.web_resources.memory
+    core_fraction = var.web_resources.core_fraction
   }
 
   boot_disk {
     initialize_params {
       image_id = data.yandex_compute_image.ubuntu.image_id
-      size     = 10
-      type     = "network-hdd"
+      size     = var.web_resources.disk_size
+      type     = var.web_resources.disk_type
     }
   }
 
